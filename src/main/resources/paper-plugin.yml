@@ -1,0 +1,4 @@
+name: AdminTrollMC
+version: '${project.version}'
+main: me.wcash.admintrollmc.AdminTrollMC
+api-version: '1.20'
