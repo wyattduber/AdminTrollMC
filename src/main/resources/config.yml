@@ -1,3 +1,5 @@
 debug: false
 
 fake-crash-message: 'A fatal error has occurred, this connection is terminated'
+fake-join-message-format: '&2&l+ &6%USERNAME%'
+fake-leave-message-format: '&4&l- &6%USERNAME%'

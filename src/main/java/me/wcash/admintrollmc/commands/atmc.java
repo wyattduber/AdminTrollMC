@@ -1,8 +1,7 @@
 package me.wcash.admintrollmc.commands;
 
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.trollcommands.fakecrash;
-import me.wcash.admintrollmc.commands.trollcommands.fakeop;
+import me.wcash.admintrollmc.commands.trollcommands.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -40,38 +39,90 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                 }
+                case "chatsudo" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Chat as a player: /atmc chatsudo <player> <message...>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if (args.length == 2) {
+                        atmc.sendMessage(sender, Component.text("Chat as a player: /atmc chatsudo <player> <message...>", NamedTextColor.RED)); // Didn't send in a message
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.chatsudo")) || sender instanceof ConsoleCommandSender) {
+
+                        // Build message from rest of "arguments"
+                        StringBuilder message = new StringBuilder();
+                        for (int i = 0; i< args.length; i++) {
+                            if (i == 0 || i == 1) continue;
+                            message.append(args[i]);
+                        }
+
+                        // Send message
+                        atmc.sendMessage(sender, chatsudo.execute(args[1], message.toString()));
+                        return true;
+                    }
+                }
                 case "fakecrash" -> {
-                    if (args.length == 1) atmc.sendMessage(sender, Component.text("Fake a disconnect crash: /atmc fakecrash <player>", NamedTextColor.RED)); // Didn't send in a player name
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Fake a disconnect crash: /atmc fakecrash <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakecrash")) || sender instanceof ConsoleCommandSender) {
                         atmc.sendMessage(sender, fakecrash.execute(args[1]));
+                        return true;
                     }
                     return true;
                 }
+                case "fakedeop" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Fake deop a player: /atmc fakedeop <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.fakedeop")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, fakeopdeop.execute(sender, args[1], "deop"));
+                        return true;
+                    }
+                }
+                case "fakejoin" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Fake a player's join message: /atmc fakejoin <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.fakejoin")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, fakejoinleave.execute(args[1], "join"));
+                        return true;
+                    }
+                }
+                case "fakeleave" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Fake player's leave message: /atmc fakeleave <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.fakeleave")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, fakejoinleave.execute(args[1], "leave"));
+                        return true;
+                    }
+                }
                 case "fakeop" -> {
-                    if (args.length == 1) atmc.sendMessage(sender, Component.text("Fake op a player: /atmc fakeop <player>", NamedTextColor.RED)); // Didn't send in a player name
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Fake op a player: /atmc fakeop <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakeop")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakeop.execute(args[1]));
+                        atmc.sendMessage(sender, fakeopdeop.execute(sender, args[1], "op"));
+                        return true;
                     }
                 }
                 default -> {
-                    TextComponent component = Component.text("Valid subcommands are: ", NamedTextColor.RED); // Make initial message
-
-                    for (int i = 0; i < atmc.commands.size(); i++) {
-                        if ((sender instanceof Player player && player.hasPermission("atmc." + atmc.commands.get(i))) || sender instanceof ConsoleCommandSender) {
-                            if (i != atmc.commands.size() - 1) {
-                                component = component.append(Component.text(atmc.commands.get(i) + " ", NamedTextColor.RED));
-                            }
-                            else {
-                                component = component.append(Component.text(atmc.commands.get(i) + ".", NamedTextColor.RED));
-                            }
-                        }
-                    }
-
-                    atmc.sendMessage(sender, component);
+                    returnAllowedSubCommandsList(sender);
                     return true;
                 }
             }
 
+        }
+        else {
+            returnAllowedSubCommandsList(sender);
+            return true;
         }
 
         return false;
@@ -86,13 +137,59 @@ public class atmc implements TabExecutor {
             case 1 -> {
                 if (sender instanceof Player player && player.hasPermission("atmc.reload"))
                     tabs.add("reload");
+                if (sender instanceof Player player && player.hasPermission("atmc.chatsudo"))
+                    tabs.add("chatsudo");
                 if (sender instanceof Player player && player.hasPermission("atmc.fakecrash"))
                     tabs.add("fakecrash");
+                if (sender instanceof Player player && player.hasPermission("atmc.fakedeop"))
+                    tabs.add("fakedeop");
+                if (sender instanceof Player player && player.hasPermission("atmc.fakejoin"))
+                    tabs.add("fakejoin");
+                if (sender instanceof Player player && player.hasPermission("atmc.fakeleave"))
+                    tabs.add("fakeleave");
+                if (sender instanceof Player player && player.hasPermission("atmc.fakeop"))
+                    tabs.add("fakeop");
             }
             case 2 -> {
-                if (args[0].equalsIgnoreCase("fakecrash")) {
-                    if (sender instanceof Player player && player.hasPermission("atmc.fakecrash")) {
-                        tabs.addAll(getOnlinePlayers());
+                switch (args[0].toLowerCase()) {
+                    case "chatsudo" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.chatsudo")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                    case "fakecrash" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.fakecrash")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                    case "fakedeop" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.fakedeop")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                    case "fakejoin" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.fakejoin")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                    case "fakeleave" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.fakeleave")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                    case "fakeop" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.fakeop")) {
+                            tabs.addAll(getOnlinePlayers());
+                        }
+                    }
+                }
+            }
+            case 3 -> {
+                switch (args[0].toLowerCase()) {
+                    case "chatsudo" -> {
+                        if (sender instanceof Player player && player.hasPermission("atmc.chatsudo")) {
+                            tabs.add("message...");
+                        }
                     }
                 }
             }
@@ -101,7 +198,7 @@ public class atmc implements TabExecutor {
         return tabs;
     }
 
-    public List<String> getOnlinePlayers() {
+    private List<String> getOnlinePlayers() {
         List<String> players = new ArrayList<>();
 
         for (Player onlinePlayer : atmc.getServer().getOnlinePlayers()) {
@@ -109,5 +206,22 @@ public class atmc implements TabExecutor {
         }
 
         return players;
+    }
+
+    private void returnAllowedSubCommandsList(CommandSender sender) {
+        TextComponent component = Component.text("Valid subcommands are: ", NamedTextColor.WHITE); // Make initial message
+
+        for (int i = 0; i < atmc.commands.size(); i++) {
+            if ((sender instanceof Player player && player.hasPermission("atmc." + atmc.commands.get(i))) || sender instanceof ConsoleCommandSender) {
+                if (i != atmc.commands.size() - 1) {
+                    component = component.append(Component.text(atmc.commands.get(i), NamedTextColor.RED)).append(Component.text(", ", NamedTextColor.WHITE));
+                }
+                else {
+                    component = component.append(Component.text("and ", NamedTextColor.WHITE)).append(Component.text(atmc.commands.get(i), NamedTextColor.RED)).append(Component.text(".", NamedTextColor.WHITE));
+                }
+            }
+        }
+
+        atmc.sendMessage(sender, component);
     }
 }

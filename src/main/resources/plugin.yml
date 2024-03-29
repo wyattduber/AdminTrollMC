@@ -16,16 +16,42 @@ commands:
 permissions:
   atmc.*:
     description: Gives access to all AdminTrollMC commands
+    default: op
     children:
       atmc.reload: true
       atmc.main: true
-      atmc.fakecrash: true
+      atmc.trolls.*: true
   atmc.main:
     description: Allows the use of the `/atmc` base command
     default: op
   atmc.reload:
     description: Allows use of the `/atmc reload` command
     default: op
+  atmc.trolls.*:
+    description: Gives access to all troll commands
+    default: op
+    children:
+      atmc.chatsudo: true
+      atmc.fakecrash: true
+      atmc.fakedeop: true
+      atmc.fakejoin: true
+      atmc.fakeleave: true
+      atmc.fakeop: true
+  atmc.chatsudo:
+    description: Allows use of the `/atmc chatsudo` command
+    default: op
   atmc.fakecrash:
     description: Allows use of the `/atmc fakecrash` command
+    default: op
+  atmc.fakedeop:
+    description: Allows use of the `/atmc fakedeop` command
+    default: op
+  atmc.fakejoin:
+    description: Allows use of the `/atmc fakejoin` command
+    default: op
+  atmc.fakeleave:
+    description: Allows use of the `/atmc fakejoin` command
+    default: op
+  atmc.fakeop:
+    description: Allows use of the `/atmc fakeop` command
     default: op

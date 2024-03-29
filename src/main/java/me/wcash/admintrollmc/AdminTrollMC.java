@@ -29,7 +29,6 @@ public final class AdminTrollMC extends JavaPlugin {
     public LoginListener ll;
     public static String[] versions = new String[2];
     public HashMap<String, Object> configValues;
-
     public List<String> commands;
 
     @Override
@@ -126,7 +125,11 @@ public final class AdminTrollMC extends JavaPlugin {
         // List out all sub-commands
         commands = new ArrayList<>();
         commands.add("reload");
+        commands.add("chatsudo");
         commands.add("fakecrash");
+        commands.add("fakedeop");
+        commands.add("fakejoin");
+        commands.add("fakeleave");
         commands.add("fakeop");
     }
 
@@ -203,12 +206,66 @@ public final class AdminTrollMC extends JavaPlugin {
     }
 
     public void sendMessage(CommandSender sender, TextComponent component) {
+        if (component == null) return; // Some command responses return a null component because they don't need a response
+
         if (sender instanceof Player player) {
             player.sendMessage(Component.text("§f[§9AdminTrollMC§f] ").append(component));
         } else {
             log(component.content());
         }
     }
+
+    // Send message with color codes
+    public void sendMessage(CommandSender sender, String message) {
+        if (sender instanceof Player) {
+            sender.sendMessage("§f[§9AdminTrollMC§f] " + replaceColors(message));
+        } else {
+            log(message);
+        }
+    }
+
+    /**
+     * The escape sequence for minecraft special chat codes
+     */
+    private static final char ESCAPE = '§';
+
+    /**
+     * Replace all the color codes (prepended with &) with the corresponding color code.
+     * This uses raw char arrays, so it can be considered to be extremely fast.
+     *
+     * @param text the text to replace the color codes in
+     * @return string with color codes replaced
+     */
+    public static String replaceColors(String text) {
+        char[] chrarray = text.toCharArray();
+
+        for (int index = 0; index < chrarray.length; index ++) {
+            char chr = chrarray[index];
+
+            // Ignore anything that we don't want
+            if (chr != '&') {
+                continue;
+            }
+
+            if ((index + 1) == chrarray.length) {
+                // we are at the end of the array
+                break;
+            }
+
+            // get the forward char
+            char forward = chrarray[index + 1];
+
+            // is it in range?
+            if ((forward >= '0' && forward <= '9') || (forward >= 'a' && forward <= 'f') || (forward >= 'k' && forward <= 'r')) {
+                // It is! Replace the char we are at now with the escape sequence
+                chrarray[index] = ESCAPE;
+            }
+        }
+
+        // Rebuild the string and return it
+        return new String(chrarray);
+    }
+
 
     // Method to compare two versions numerically
     private int compareVersions(String installedVersion, String newestVersion) {
