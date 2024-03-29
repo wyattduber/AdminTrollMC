@@ -1,5 +1,6 @@
 package me.wcash.admintrollmc;
 
+import me.wcash.admintrollmc.commands.atmc;
 import me.wcash.admintrollmc.lib.LibrarySetup;
 import me.wcash.admintrollmc.listeners.LoginListener;
 import net.kyori.adventure.text.TextComponent;
@@ -8,8 +9,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -26,7 +26,7 @@ public final class AdminTrollMC extends JavaPlugin {
     public File customConfigFile;
     public LoginListener ll;
     public static String[] versions = new String[2];
-    public boolean debugMode = false;
+    public HashMap<String, Object> configValues;
 
     @Override
     public void onEnable() {
@@ -46,7 +46,7 @@ public final class AdminTrollMC extends JavaPlugin {
         }
 
         /* Config Parsing */
-        if (!parseConfig()) {
+        if (parseConfig()) {
             error("Config Not Properly Configured! Plugin will not function!");
         }
 
@@ -55,8 +55,7 @@ public final class AdminTrollMC extends JavaPlugin {
 
         /* Commands */
         try {
-            //Objects.requireNonNull(this.getCommand("mcdb")).setExecutor(new MCDBCommand());
-            //Objects.requireNonNull(this.getCommand("mcdb")).setTabCompleter(new MCDBTabComplete());
+            Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new atmc());
         } catch (NullPointerException e) {
             error("Error setting up commands! Contact the developer if you cannot fix this issue. Stack Trace:");
             error(e.getMessage());
@@ -79,7 +78,7 @@ public final class AdminTrollMC extends JavaPlugin {
         PlayerJoinEvent.getHandlerList().unregister(ll);
 
         /* Config Parsing */
-        if (!parseConfig()) {
+        if (parseConfig()) {
             flag = false;
             error("Config Not Properly Configured! Plugin will not function!");
         }
@@ -91,14 +90,14 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public boolean parseConfig() {
         try {
-            debugMode = getConfigBool("debug");
-        } catch (Exception e) {
-            saveDefaultConfig();
-            warn("Debug Mode cannot be determined! Check that the config was formatted correctly.");
+            configValues = (HashMap<String, Object>) config.getValues(false);
+        } catch (Exception ex) {
+            warn("Error loading config! Plugin will not work properly!");
+            return true;
         }
 
         log("Config Loaded!");
-        return true;
+        return false;
     }
 
     public void initListeners() {
@@ -120,18 +119,14 @@ public final class AdminTrollMC extends JavaPlugin {
         log("Minecraft Listeners Loaded!");
     }
 
+    public Object getConfigValue(String key) {
+        return configValues.get(key);
+    }
+
     /* Standard Methods */
 
     public static AdminTrollMC getPlugin() {
         return getPlugin(AdminTrollMC.class);
-    }
-
-    public String getConfigString(String entryName) {
-        return config.getString(entryName);
-    }
-
-    public boolean getConfigBool(String entryName) {
-        return config.getBoolean(entryName);
     }
 
     public void reloadCustomConfig() {
@@ -198,7 +193,7 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public void sendMessage(CommandSender sender, TextComponent component) {
         if (sender instanceof Player player) {
-            player.sendMessage("§f[§9MCDBridge§f] " + component);
+            player.sendMessage("§f[§9AdminTrollMC§f] " + component);
         } else {
             log(component.content());
         }
@@ -222,13 +217,9 @@ public final class AdminTrollMC extends JavaPlugin {
 
         // If we reach here, versions are equal up to minLength
         // So, if one version has more parts, it is considered newer
-        if (installedParts.length < newestParts.length) {
-            return -1; // installed version is older
-        } else if (installedParts.length > newestParts.length) {
-            return 1; // installed version is newer
-        } else {
-            return 0; // versions are exactly the same
-        }
+        // installed version is newer
+        // versions are exactly the same
+        return Integer.compare(installedParts.length, newestParts.length); // installed version is older
     }
 
 }

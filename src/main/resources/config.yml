@@ -1,2 +1,3 @@
 debug: false
 
+fake-crash-message: 'A fatal error has occurred, this connection is terminated'

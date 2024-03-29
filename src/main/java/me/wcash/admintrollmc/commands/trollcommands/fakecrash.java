@@ -1,21 +1,25 @@
 package me.wcash.admintrollmc.commands.trollcommands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import me.wcash.admintrollmc.AdminTrollMC;
+import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerKickEvent;
 
-import java.util.List;
+public class fakecrash {
 
-public class fakecrash implements TabExecutor {
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return false;
+    private static final AdminTrollMC atmc = AdminTrollMC.getPlugin();
+
+    public static TextComponent execute(String target) {
+        Player player = Bukkit.getPlayer(target);
+        if (player == null) {
+            return Component.text("Player is not online!", NamedTextColor.RED);
+        }
+
+        player.kick(Component.text((String)atmc.getConfigValue("fake-crash-message")), PlayerKickEvent.Cause.UNKNOWN);
+
+        return Component.text("Successfully crashed " + target + "!");
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
-    }
 }
