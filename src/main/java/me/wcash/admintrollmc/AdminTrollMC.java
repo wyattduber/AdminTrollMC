@@ -31,10 +31,6 @@ public final class AdminTrollMC extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        /* Load Dependencies */
-        LibrarySetup librarySetup = new LibrarySetup();
-        librarySetup.loadLibraries();
-
         /* Load and Initiate Configs */
         try {
             reloadCustomConfig();
@@ -49,6 +45,10 @@ public final class AdminTrollMC extends JavaPlugin {
         if (parseConfig()) {
             error("Config Not Properly Configured! Plugin will not function!");
         }
+
+        /* Load Dependencies */
+        LibrarySetup librarySetup = new LibrarySetup();
+        librarySetup.loadLibraries();
 
         /* Initialize Listeners */
         initListeners();
