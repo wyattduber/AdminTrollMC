@@ -2,6 +2,9 @@ name: AdminTrollMC
 version: '${project.version}'
 main: me.wcash.admintrollmc.AdminTrollMC
 api-version: '1.20'
+website: https://github.com/wyattduber/AdminTrollMC
+author: Wcash
+description: Admin Trolling Plugin
 
 commands:
   atmc:
@@ -15,9 +18,14 @@ permissions:
     description: Gives access to all AdminTrollMC commands
     children:
       atmc.reload: true
+      atmc.main: true
+      atmc.fakecrash: true
   atmc.main:
-    description: Allows the use of the /atmc base command
+    description: Allows the use of the `/atmc` base command
     default: op
   atmc.reload:
     description: Allows use of the `/atmc reload` command
+    default: op
+  atmc.fakecrash:
+    description: Allows use of the `/atmc fakecrash` command
     default: op

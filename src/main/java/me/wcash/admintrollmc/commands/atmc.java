@@ -2,7 +2,9 @@ package me.wcash.admintrollmc.commands;
 
 import me.wcash.admintrollmc.AdminTrollMC;
 import me.wcash.admintrollmc.commands.trollcommands.fakecrash;
+import me.wcash.admintrollmc.commands.trollcommands.fakeop;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,13 +37,38 @@ public class atmc implements TabExecutor {
                         } else {
                             atmc.sendMessage(sender, Component.text("Plugin Reload Failed! See console for details.", NamedTextColor.RED));
                         }
+                        return true;
                     }
                 }
                 case "fakecrash" -> {
-                    if (args.length == 1) return false; // Didn't send in a player name
+                    if (args.length == 1) atmc.sendMessage(sender, Component.text("Fake a disconnect crash: /atmc fakecrash <player>", NamedTextColor.RED)); // Didn't send in a player name
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakecrash")) || sender instanceof ConsoleCommandSender) {
                         atmc.sendMessage(sender, fakecrash.execute(args[1]));
                     }
+                    return true;
+                }
+                case "fakeop" -> {
+                    if (args.length == 1) atmc.sendMessage(sender, Component.text("Fake op a player: /atmc fakeop <player>", NamedTextColor.RED)); // Didn't send in a player name
+                    if ((sender instanceof Player player && player.hasPermission("atmc.fakeop")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, fakeop.execute(args[1]));
+                    }
+                }
+                default -> {
+                    TextComponent component = Component.text("Valid subcommands are: ", NamedTextColor.RED); // Make initial message
+
+                    for (int i = 0; i < atmc.commands.size(); i++) {
+                        if ((sender instanceof Player player && player.hasPermission("atmc." + atmc.commands.get(i))) || sender instanceof ConsoleCommandSender) {
+                            if (i != atmc.commands.size() - 1) {
+                                component = component.append(Component.text(atmc.commands.get(i) + " ", NamedTextColor.RED));
+                            }
+                            else {
+                                component = component.append(Component.text(atmc.commands.get(i) + ".", NamedTextColor.RED));
+                            }
+                        }
+                    }
+
+                    atmc.sendMessage(sender, component);
+                    return true;
                 }
             }
 

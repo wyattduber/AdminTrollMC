@@ -1,8 +1,8 @@
 package me.wcash.admintrollmc;
 
 import me.wcash.admintrollmc.commands.atmc;
-import me.wcash.admintrollmc.lib.LibrarySetup;
 import me.wcash.admintrollmc.listeners.LoginListener;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -27,6 +29,8 @@ public final class AdminTrollMC extends JavaPlugin {
     public LoginListener ll;
     public static String[] versions = new String[2];
     public HashMap<String, Object> configValues;
+
+    public List<String> commands;
 
     @Override
     public void onEnable() {
@@ -46,16 +50,12 @@ public final class AdminTrollMC extends JavaPlugin {
             error("Config Not Properly Configured! Plugin will not function!");
         }
 
-        /* Load Dependencies */
-        LibrarySetup librarySetup = new LibrarySetup();
-        librarySetup.loadLibraries();
-
         /* Initialize Listeners */
         initListeners();
 
         /* Commands */
         try {
-            Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new atmc());
+            initCommands();
         } catch (NullPointerException e) {
             error("Error setting up commands! Contact the developer if you cannot fix this issue. Stack Trace:");
             error(e.getMessage());
@@ -117,6 +117,17 @@ public final class AdminTrollMC extends JavaPlugin {
             error(e.getMessage());
         }
         log("Minecraft Listeners Loaded!");
+    }
+
+    public void initCommands() throws NullPointerException {
+        // Init the command
+        Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new atmc());
+
+        // List out all sub-commands
+        commands = new ArrayList<>();
+        commands.add("reload");
+        commands.add("fakecrash");
+        commands.add("fakeop");
     }
 
     public Object getConfigValue(String key) {
@@ -193,7 +204,7 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public void sendMessage(CommandSender sender, TextComponent component) {
         if (sender instanceof Player player) {
-            player.sendMessage("§f[§9AdminTrollMC§f] " + component);
+            player.sendMessage(Component.text("§f[§9AdminTrollMC§f] ").append(component));
         } else {
             log(component.content());
         }
