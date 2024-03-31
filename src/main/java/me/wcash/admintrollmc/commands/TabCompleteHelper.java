@@ -16,13 +16,15 @@ public class TabCompleteHelper {
         if (currentArgument.isEmpty()) {
             return validTabCompletes;
         } else if (commands.contains(currentArgument.toLowerCase())) {
-            validTabCompletes.add(currentArgument.toLowerCase());
+            if (player.hasPermission("atmc." + currentArgument.toLowerCase()))
+                validTabCompletes.add(currentArgument.toLowerCase());
             return validTabCompletes;
         }
 
         for (String command : commands) {
             if (command.substring(0, currentArgumentLength).equalsIgnoreCase(currentArgument)) {
-                validTabCompletes.add(command);
+                if (player.hasPermission("atmc." + command))
+                    validTabCompletes.add(command);
             }
         }
 

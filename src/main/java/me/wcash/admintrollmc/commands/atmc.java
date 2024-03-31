@@ -152,43 +152,12 @@ public class atmc implements TabExecutor {
                 return TabCompleteHelper.TabComplete(args[0], subcommands, player);
             }
             case 2 -> {
-                switch (args[0].toLowerCase()) {
-                    case "chatsudo" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.chatsudo")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                    case "fakecrash" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.fakecrash")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                    case "fakedeop" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.fakedeop")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                    case "fakejoin" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.fakejoin")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                    case "fakeleave" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.fakeleave")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                    case "fakeop" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.fakeop")) {
-                            tabs.addAll(getOnlinePlayers());
-                        }
-                    }
-                }
+                return TabCompleteHelper.TabComplete(args[1], getOnlinePlayers(), player);
             }
             case 3 -> {
                 switch (args[0].toLowerCase()) {
                     case "chatsudo" -> {
-                        if (sender instanceof Player player && player.hasPermission("atmc.chatsudo")) {
+                        if (player.hasPermission("atmc.chatsudo")) {
                             tabs.add("message...");
                         }
                     }
