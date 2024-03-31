@@ -26,3 +26,6 @@ replay_pid*
 # JetBrains
 .idea/
 *.iml
+
+# Maven
+dependency-reduced-pom.xml

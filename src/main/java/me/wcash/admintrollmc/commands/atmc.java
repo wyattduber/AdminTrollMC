@@ -19,6 +19,18 @@ import java.util.List;
 public class atmc implements TabExecutor {
 
     public final AdminTrollMC atmc = AdminTrollMC.getPlugin();
+    public final List<String> subcommands = new ArrayList<>()
+    {
+        {
+            add("chatsudo");
+            add("fakecrash");
+            add("fakedeop");
+            add("fakejoin");
+            add("fakeleave");
+            add("fakeop");
+            add("reload");
+        }
+    };
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -130,25 +142,14 @@ public class atmc implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (sender instanceof ConsoleCommandSender) return null;
+        Player player = (Player) sender;
 
         List<String> tabs = new ArrayList<>();
 
         switch (args.length) {
             case 1 -> {
-                if (sender instanceof Player player && player.hasPermission("atmc.reload"))
-                    tabs.add("reload");
-                if (sender instanceof Player player && player.hasPermission("atmc.chatsudo"))
-                    tabs.add("chatsudo");
-                if (sender instanceof Player player && player.hasPermission("atmc.fakecrash"))
-                    tabs.add("fakecrash");
-                if (sender instanceof Player player && player.hasPermission("atmc.fakedeop"))
-                    tabs.add("fakedeop");
-                if (sender instanceof Player player && player.hasPermission("atmc.fakejoin"))
-                    tabs.add("fakejoin");
-                if (sender instanceof Player player && player.hasPermission("atmc.fakeleave"))
-                    tabs.add("fakeleave");
-                if (sender instanceof Player player && player.hasPermission("atmc.fakeop"))
-                    tabs.add("fakeop");
+                return TabCompleteHelper.TabComplete(args[0], subcommands, player);
             }
             case 2 -> {
                 switch (args[0].toLowerCase()) {
