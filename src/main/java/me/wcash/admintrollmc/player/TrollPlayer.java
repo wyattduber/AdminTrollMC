@@ -3,6 +3,9 @@ package me.wcash.admintrollmc.player;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class TrollPlayer implements Player {
 
     private boolean isFrozen = false;
@@ -14,6 +17,13 @@ public abstract class TrollPlayer implements Player {
     private BukkitTask freezeTask = null;
     private BukkitTask isJumpingTask = null;
     private BukkitTask isDeafenedTask = null;
+    private List<BukkitTask> taskList = new ArrayList<>() {
+        {
+            add(freezeTask);
+            add(isJumpingTask);
+            add(isDeafenedTask);
+        }
+    };
 
     public boolean isFrozen() {
         return isFrozen;
@@ -97,6 +107,18 @@ public abstract class TrollPlayer implements Player {
 
     public void setBlind(boolean isBlind) {
         this.isBlind = isBlind;
+    }
+
+    public void setAllStatesFalse() {
+        isBlind = false;
+        isBurning = false;
+        isConfused = false;
+        isDeafened = false;
+        isFrozen = false;
+    }
+
+    public List<BukkitTask> getTaskList(){
+        return taskList;
     }
 
 }

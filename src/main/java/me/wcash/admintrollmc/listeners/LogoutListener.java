@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.Objects;
 
 public class LogoutListener implements Listener {
 
@@ -19,7 +22,11 @@ public class LogoutListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         TrollPlayer trollPlayer = (TrollPlayer) player;
-        trollPlayer.setFrozen(false);
+        trollPlayer.setAllStatesFalse();
+
+        trollPlayer.getTaskList().stream()
+                .filter(Objects::nonNull)
+                .forEach(BukkitTask::cancel);
 
         atmc.onlinePlayers.remove(player.getName());
     }
