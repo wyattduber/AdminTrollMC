@@ -19,7 +19,7 @@ public class FakeCrash {
 
         player.kick(Component.text((String)atmc.getConfigValue("fake-crash-message")), PlayerKickEvent.Cause.UNKNOWN);
 
-        return Component.text("Successfully crashed " + target + "!");
+        return Component.text("Crashed " + target + "!");
     }
 
 }

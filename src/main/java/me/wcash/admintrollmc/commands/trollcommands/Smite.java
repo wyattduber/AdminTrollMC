@@ -16,7 +16,7 @@ public class Smite {
 
         player.getWorld().strikeLightning(player.getLocation());
 
-        return Component.text("Smited " + target + "!");
+        return Component.text("Smitten " + target + "!");
     }
 
 }

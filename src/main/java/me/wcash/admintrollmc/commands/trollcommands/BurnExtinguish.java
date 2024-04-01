@@ -23,7 +23,7 @@ public class BurnExtinguish {
         player.setFireTicks(seconds * 20);
         player.setBurning(true);
 
-        return Component.text("Successfully burned " + target + " for " + AdminTrollMC.formatSeconds(seconds) + "!");
+        return Component.text("Burning " + target + " for " + AdminTrollMC.formatSeconds(seconds) + "!");
     }
 
     public static TextComponent extinguish(String target) {
@@ -39,7 +39,7 @@ public class BurnExtinguish {
         player.setFireTicks(0);
         player.setBurning(false);
 
-        return Component.text("Successfully extinguished " + target + "!");
+        return Component.text("Extinguished " + target + "!");
     }
 
 }

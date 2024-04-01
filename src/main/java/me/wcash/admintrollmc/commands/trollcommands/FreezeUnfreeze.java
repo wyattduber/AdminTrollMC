@@ -74,7 +74,7 @@ public class FreezeUnfreeze implements Listener {
         PlayerJumpEvent.getHandlerList().unregister(this);
         EntityDamageEvent.getHandlerList().unregister(this);
 
-        return Component.text("Successfully unfroze " + target + "!");
+        return Component.text("Unfroze " + target + "!");
     }
 
     @EventHandler

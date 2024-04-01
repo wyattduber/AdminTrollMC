@@ -1,11 +1,11 @@
 package me.wcash.admintrollmc;
 
-import me.wcash.admintrollmc.commands.ATMC;
 import me.wcash.admintrollmc.commands.player.TrollPlayer;
 import me.wcash.admintrollmc.listeners.LoginListener;
 import me.wcash.admintrollmc.listeners.LogoutListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -33,13 +31,12 @@ public final class AdminTrollMC extends JavaPlugin {
     public LogoutListener logoutListener;
     public static String[] versions = new String[2];
     public HashMap<String, Object> configValues;
-    public List<String> commands;
     public HashMap<String, TrollPlayer> onlinePlayers;
 
     @Override
     public void onEnable() {
 
-        /* Load and Initiate Configs */
+        /* Load and Initialize Configs */
         try {
             reloadCustomConfig();
             config = getCustomConfig();
@@ -54,15 +51,15 @@ public final class AdminTrollMC extends JavaPlugin {
             error("Config Not Properly Configured! Plugin will not function!");
         }
 
-        /* Init Online Players */
-        onlinePlayers = new HashMap<>();
+        /* Initialize Online Players Map */
+        onlinePlayers = new HashMap<>(); // Can be empty on startup since nobody is online
 
         /* Initialize Listeners */
         initListeners();
 
-        /* Commands */
+        /* Initialize the Base Command */
         try {
-            initCommands();
+            Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new me.wcash.admintrollmc.commands.ATMCCommand());
         } catch (NullPointerException e) {
             error("Error setting up commands! Contact the developer if you cannot fix this issue. Stack Trace:");
             error(e.getMessage());
@@ -71,7 +68,8 @@ public final class AdminTrollMC extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        /* Cancel all pending/running tasks */
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     public boolean reload() {
@@ -131,21 +129,6 @@ public final class AdminTrollMC extends JavaPlugin {
         log("Minecraft Listeners Loaded!");
     }
 
-    public void initCommands() throws NullPointerException {
-        // Init the command
-        Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new ATMC());
-
-        // List out all sub-commands
-        commands = new ArrayList<>();
-        commands.add("reload");
-        commands.add("chatsudo");
-        commands.add("fakecrash");
-        commands.add("fakedeop");
-        commands.add("fakejoin");
-        commands.add("fakeleave");
-        commands.add("fakeop");
-    }
-
     public Object getConfigValue(String key) {
         return configValues.get(key);
     }
@@ -201,6 +184,8 @@ public final class AdminTrollMC extends JavaPlugin {
             this.saveResource("config.yml", false);
         }
     }
+
+    /* Public Helper Methods */
 
     public void log(String message) {
         this.getLogger().log(Level.INFO, message);
