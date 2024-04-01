@@ -1,13 +1,12 @@
 package me.wcash.admintrollmc.commands.trollcommands;
 
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.TrollCommand;
 import me.wcash.admintrollmc.commands.player.TrollPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class BurnExtinguish implements TrollCommand {
+public class BurnExtinguish {
 
     private static final AdminTrollMC atmc = AdminTrollMC.getPlugin();
 

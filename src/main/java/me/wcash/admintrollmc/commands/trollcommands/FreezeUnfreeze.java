@@ -2,7 +2,6 @@ package me.wcash.admintrollmc.commands.trollcommands;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.TrollCommand;
 import me.wcash.admintrollmc.commands.player.TrollPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -15,7 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class FreezeUnfreeze implements TrollCommand, Listener {
+public class FreezeUnfreeze implements Listener {
 
     private static final AdminTrollMC atmc = AdminTrollMC.getPlugin();
 
