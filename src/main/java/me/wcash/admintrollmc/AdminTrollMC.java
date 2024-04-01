@@ -1,6 +1,6 @@
 package me.wcash.admintrollmc;
 
-import me.wcash.admintrollmc.commands.player.TrollPlayer;
+import me.wcash.admintrollmc.player.TrollPlayer;
 import me.wcash.admintrollmc.listeners.LoginListener;
 import me.wcash.admintrollmc.listeners.LogoutListener;
 import net.kyori.adventure.text.Component;

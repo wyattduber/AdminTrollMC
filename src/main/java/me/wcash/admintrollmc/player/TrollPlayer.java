@@ -1,4 +1,4 @@
-package me.wcash.admintrollmc.commands.player;
+package me.wcash.admintrollmc.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;

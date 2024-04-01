@@ -2,7 +2,7 @@ package me.wcash.admintrollmc.commands.trollcommands;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.player.TrollPlayer;
+import me.wcash.admintrollmc.player.TrollPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;

@@ -1,7 +1,7 @@
 package me.wcash.admintrollmc.listeners;
 
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.player.TrollPlayer;
+import me.wcash.admintrollmc.player.TrollPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
