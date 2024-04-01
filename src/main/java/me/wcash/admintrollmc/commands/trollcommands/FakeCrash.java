@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;
 
-public class fakecrash {
+public class FakeCrash {
 
     private static final AdminTrollMC atmc = AdminTrollMC.getPlugin();
 

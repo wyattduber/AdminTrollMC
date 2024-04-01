@@ -16,19 +16,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class atmc implements TabExecutor {
+public class ATMC implements TabExecutor {
 
     public final AdminTrollMC atmc = AdminTrollMC.getPlugin();
     public final List<String> subcommands = new ArrayList<>()
     {
         {
+            add("burn");
             add("chatsudo");
+            add("extinguish");
             add("fakecrash");
             add("fakedeop");
             add("fakejoin");
             add("fakeleave");
             add("fakeop");
+            add("freeze");
             add("reload");
+            add("smite");
+            add("unfreeze");
         }
     };
 
@@ -41,13 +46,23 @@ public class atmc implements TabExecutor {
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
-                case "reload" -> {
-                    if ((sender instanceof Player player && player.hasPermission("atmc.reload")) || sender instanceof ConsoleCommandSender) {
-                        if (atmc.reload()) {
-                            atmc.sendMessage(sender, Component.text("Plugin Reloaded!"));
-                        } else {
-                            atmc.sendMessage(sender, Component.text("Plugin Reload Failed! See console for details.", NamedTextColor.RED));
+                case "burn" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <time>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.burn")) || sender instanceof ConsoleCommandSender) {
+                        if (args.length == 2) {
+                            atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            return true;
                         }
+
+                        int seconds = parseInputTime(args[2]);
+                        if (seconds == 0) {
+                            atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
+                            return true;
+                        }
+                        atmc.sendMessage(sender, BurnExtinguish.burn(args[1], seconds));
                         return true;
                     }
                 }
@@ -70,7 +85,18 @@ public class atmc implements TabExecutor {
                         }
 
                         // Send message
-                        atmc.sendMessage(sender, chatsudo.execute(args[1], message.toString()));
+                        atmc.sendMessage(sender, ChatSudo.execute(args[1], message.toString()));
+                        return true;
+                    }
+                }
+                case "extinguish" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Extinguish a player: /atmc extinguish <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+
+                    if ((sender instanceof Player player && player.hasPermission("atmc.extinguish")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, BurnExtinguish.extinguish(args[1]));
                         return true;
                     }
                 }
@@ -80,7 +106,7 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakecrash")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakecrash.execute(args[1]));
+                        atmc.sendMessage(sender, FakeCrash.execute(args[1]));
                         return true;
                     }
                     return true;
@@ -91,7 +117,7 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakedeop")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakeopdeop.execute(sender, args[1], "deop"));
+                        atmc.sendMessage(sender, FakeOpDeop.execute(sender, args[1], "deop"));
                         return true;
                     }
                 }
@@ -101,7 +127,7 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakejoin")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakejoinleave.execute(args[1], "join"));
+                        atmc.sendMessage(sender, FakeJoinLeave.execute(args[1], "join"));
                         return true;
                     }
                 }
@@ -111,7 +137,7 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakeleave")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakejoinleave.execute(args[1], "leave"));
+                        atmc.sendMessage(sender, FakeJoinLeave.execute(args[1], "leave"));
                         return true;
                     }
                 }
@@ -121,7 +147,59 @@ public class atmc implements TabExecutor {
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.fakeop")) || sender instanceof ConsoleCommandSender) {
-                        atmc.sendMessage(sender, fakeopdeop.execute(sender, args[1], "op"));
+                        atmc.sendMessage(sender, FakeOpDeop.execute(sender, args[1], "op"));
+                        return true;
+                    }
+                }
+                case "freeze" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <time>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.freeze")) || sender instanceof ConsoleCommandSender) {
+                        if (args.length == 2) {
+                            atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            return true;
+                        }
+
+                        int seconds = parseInputTime(args[2]);
+                        if (seconds == 0) {
+                            atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
+                            return true;
+                        }
+                        atmc.sendMessage(sender, new FreezeUnfreeze().freeze(args[1], seconds));
+                        return true;
+                    }
+                }
+                case "reload" -> {
+                    if ((sender instanceof Player player && player.hasPermission("atmc.reload")) || sender instanceof ConsoleCommandSender) {
+                        if (atmc.reload()) {
+                            atmc.sendMessage(sender, Component.text("Plugin Reloaded!"));
+                        } else {
+                            atmc.sendMessage(sender, Component.text("Plugin Reload Failed! See console for details.", NamedTextColor.RED));
+                        }
+                        return true;
+                    }
+                }
+                case "smite" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Smite a player: /atmc smite <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+
+                    if ((sender instanceof Player player && player.hasPermission("atmc.smite")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, Smite.execute(args[1]));
+                        return true;
+                    }
+                }
+                case "unfreeze" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Unfreeze a player: /atmc unfreeze <player>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+
+                    if ((sender instanceof Player player && player.hasPermission("atmc.unfreeze")) || sender instanceof ConsoleCommandSender) {
+                        atmc.sendMessage(sender, new FreezeUnfreeze().unfreeze(args[1]));
                         return true;
                     }
                 }
@@ -161,6 +239,11 @@ public class atmc implements TabExecutor {
                             tabs.add("message...");
                         }
                     }
+                    case "burn", "freeze" -> {
+                        if (player.hasPermission("atmc.burn") || player.hasPermission("atmc.freeze")) {
+                            tabs.add("time");
+                        }
+                    }
                 }
             }
         }
@@ -193,5 +276,21 @@ public class atmc implements TabExecutor {
         }
 
         atmc.sendMessage(sender, component);
+    }
+
+    public int parseInputTime(String s) {
+        // Extract the numeric part from the input string
+        int numericValue = Integer.parseInt(s.substring(0, s.length() - 1));
+
+        // Get the unit from the input string
+        char unit = s.charAt(s.length() - 1);
+
+        // Convert the input time to seconds based on the unit
+        return switch (unit) {
+            case 'm' -> numericValue * 60; // Convert minutes to seconds
+            case 's' -> numericValue; // No conversion needed for seconds
+            case 'h' -> numericValue * 3600; // Convert hours to seconds
+            default -> 0; // Invalid unit
+        };
     }
 }

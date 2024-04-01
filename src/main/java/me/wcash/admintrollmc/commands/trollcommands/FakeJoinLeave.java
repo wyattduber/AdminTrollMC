@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class fakejoinleave {
+public class FakeJoinLeave {
 
     private static final AdminTrollMC atmc = AdminTrollMC.getPlugin();
 

@@ -1,6 +1,7 @@
 package me.wcash.admintrollmc.listeners;
 
 import me.wcash.admintrollmc.AdminTrollMC;
+import me.wcash.admintrollmc.commands.player.TrollPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +28,9 @@ public class LoginListener implements Listener {
             atmc.log("Version " + versions[0] + " available! You have " + versions[1] + ".");
             atmc.log("Download it at: https://www.spigotmc.org/resources/mcdbridge-beta.88409/");
         }
+
+        /* Add player to onlinePlayers list */
+        atmc.onlinePlayers.put(event.getPlayer().getName(), (TrollPlayer) event.getPlayer());
     }
 
 }

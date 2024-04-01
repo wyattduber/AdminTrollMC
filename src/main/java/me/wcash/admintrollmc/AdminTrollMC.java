@@ -1,7 +1,9 @@
 package me.wcash.admintrollmc;
 
-import me.wcash.admintrollmc.commands.atmc;
+import me.wcash.admintrollmc.commands.ATMC;
+import me.wcash.admintrollmc.commands.player.TrollPlayer;
 import me.wcash.admintrollmc.listeners.LoginListener;
+import me.wcash.admintrollmc.listeners.LogoutListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
@@ -9,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -26,10 +29,12 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public FileConfiguration config;
     public File customConfigFile;
-    public LoginListener ll;
+    public LoginListener loginListener;
+    public LogoutListener logoutListener;
     public static String[] versions = new String[2];
     public HashMap<String, Object> configValues;
     public List<String> commands;
+    public HashMap<String, TrollPlayer> onlinePlayers;
 
     @Override
     public void onEnable() {
@@ -48,6 +53,9 @@ public final class AdminTrollMC extends JavaPlugin {
         if (parseConfig()) {
             error("Config Not Properly Configured! Plugin will not function!");
         }
+
+        /* Init Online Players */
+        onlinePlayers = new HashMap<>();
 
         /* Initialize Listeners */
         initListeners();
@@ -69,12 +77,13 @@ public final class AdminTrollMC extends JavaPlugin {
     public boolean reload() {
         boolean flag = true;
 
+        // De-Register listeners
+        PlayerJoinEvent.getHandlerList().unregister(loginListener);
+        PlayerQuitEvent.getHandlerList().unregister(logoutListener);
+
         reloadCustomConfig();
         config = getCustomConfig();
         saveCustomConfig();
-
-        /* Un-Register Listeners */
-        PlayerJoinEvent.getHandlerList().unregister(ll);
 
         /* Config Parsing */
         if (parseConfig()) {
@@ -106,11 +115,15 @@ public final class AdminTrollMC extends JavaPlugin {
                 if (compareVersions(this.getPluginMeta().getVersion(), version) < 0) {
                     versions[0] = version;
                     versions[1] = this.getPluginMeta().getVersion();
-                    getServer().getPluginManager().registerEvents(new LoginListener(true, versions), this);
+                    loginListener = new LoginListener(true, versions);
+                    getServer().getPluginManager().registerEvents(loginListener, this);
                 } else {
-                    getServer().getPluginManager().registerEvents(new LoginListener(false, versions), this);
+                    loginListener = new LoginListener(false, versions);
+                    getServer().getPluginManager().registerEvents(loginListener, this);
                 }
             });
+
+            logoutListener = new LogoutListener();
         } catch (Exception e) {
             error("Error initializing Update Checker! Contact the developer if you cannot fix this issue. Stack Trace:");
             error(e.getMessage());
@@ -120,7 +133,7 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public void initCommands() throws NullPointerException {
         // Init the command
-        Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new atmc());
+        Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new ATMC());
 
         // List out all sub-commands
         commands = new ArrayList<>();
@@ -288,6 +301,36 @@ public final class AdminTrollMC extends JavaPlugin {
         // installed version is newer
         // versions are exactly the same
         return Integer.compare(installedParts.length, newestParts.length); // installed version is older
+    }
+
+    public static String formatSeconds(int seconds) {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int remainingSeconds = seconds % 60;
+
+        StringBuilder formattedTime = new StringBuilder();
+        if (hours > 0) {
+            formattedTime.append(hours).append(" hour");
+            if (hours > 1) {
+                formattedTime.append("s");
+            }
+            formattedTime.append(" ");
+        }
+        if (minutes > 0) {
+            formattedTime.append(minutes).append(" minute");
+            if (minutes > 1) {
+                formattedTime.append("s");
+            }
+            formattedTime.append(" ");
+        }
+        if (remainingSeconds > 0 || (hours == 0 && minutes == 0)) {
+            formattedTime.append(remainingSeconds).append(" second");
+            if (remainingSeconds != 1) {
+                formattedTime.append("s");
+            }
+        }
+
+        return formattedTime.toString();
     }
 
 }

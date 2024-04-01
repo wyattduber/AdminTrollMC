@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class fakeopdeop {
+public class FakeOpDeop {
 
     public static TextComponent execute(CommandSender source, String target, String type) {
         Player targetPlayer = Bukkit.getPlayer(target);

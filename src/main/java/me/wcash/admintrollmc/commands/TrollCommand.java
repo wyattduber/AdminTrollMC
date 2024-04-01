@@ -1,4 +1,4 @@
-package me.wcash.admintrollmc.commands.trollcommands;
+package me.wcash.admintrollmc.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -6,18 +6,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class chatsudo {
+public interface TrollCommand {
 
-    public static TextComponent execute(String target, String message) {
+    static TextComponent execute(String target) {
         Player player = Bukkit.getPlayer(target);
         if (player == null) {
             return Component.text("Player is not online!", NamedTextColor.RED);
         }
 
-        // Chat as target player with incoming message
-        player.chat(message);
-
-        return null;
+        return Component.text("Successfully executed command on " + target + "!");
     }
 
 }

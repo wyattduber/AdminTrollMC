@@ -31,14 +31,24 @@ permissions:
     description: Gives access to all troll commands
     default: op
     children:
+      atmc.burn: true
       atmc.chatsudo: true
+      atmc.extinguish: true
       atmc.fakecrash: true
       atmc.fakedeop: true
       atmc.fakejoin: true
       atmc.fakeleave: true
       atmc.fakeop: true
+      atmc.freeze: true
+      atmc.unfreeze: true
+  atmc.burn:
+    description: Allows use of the `/atmc burn` command
+    default: op
   atmc.chatsudo:
     description: Allows use of the `/atmc chatsudo` command
+    default: op
+  atmc.extinguish:
+    description: Allows use of the `/atmc extinguish` command
     default: op
   atmc.fakecrash:
     description: Allows use of the `/atmc fakecrash` command
@@ -54,4 +64,10 @@ permissions:
     default: op
   atmc.fakeop:
     description: Allows use of the `/atmc fakeop` command
+    default: op
+  atmc.freeze:
+    description: Allows use of the `/atmc freeze` command
+    default: op
+  atmc.unfreeze:
+    description: Allows use of the `/atmc unfreeze` command
     default: op
