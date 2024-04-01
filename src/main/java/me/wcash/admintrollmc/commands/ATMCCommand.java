@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ATMCCommand implements TabExecutor {
@@ -22,8 +23,11 @@ public class ATMCCommand implements TabExecutor {
     public final List<String> subcommands = new ArrayList<>()
     {
         {
+            add("blind");
             add("burn");
             add("chatsudo");
+            add("confuse");
+            add("deafen");
             add("explode");
             add("extinguish");
             add("fakecrash");
@@ -48,15 +52,44 @@ public class ATMCCommand implements TabExecutor {
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
+                case "blind" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Blind a player: /atmc blind <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.blind")) || sender instanceof ConsoleCommandSender) {
+                        if (args.length == 2) {
+                            atmc.sendMessage(sender, Component.text("Blind a player: /atmc blind <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            return true;
+                        }
+
+                        if (args[2].equalsIgnoreCase("stop")) {
+                            atmc.sendMessage(sender, Blind.regainSight(args[1]));
+                            return true;
+                        }
+
+                        int seconds = parseInputTime(args[2]);
+                        if (seconds == 0) {
+                            atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
+                            return true;
+                        }
+                        atmc.sendMessage(sender, Blind.blind(args[1], seconds));
+                        return true;
+                    }
+                }
                 case "burn" -> {
                     if (args.length == 1) {
-                        atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <time>", NamedTextColor.RED)); // Didn't send in a player name
+                        atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a player name
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.burn")) || sender instanceof ConsoleCommandSender) {
                         if (args.length == 2) {
-                            atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            atmc.sendMessage(sender, Component.text("Burn a player: /atmc burn <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
                             return true;
+                        }
+
+                        if (args[2].equalsIgnoreCase("stop")) {
+                            atmc.sendMessage(sender, BurnExtinguish.extinguish(args[1]));
                         }
 
                         int seconds = parseInputTime(args[2]);
@@ -88,6 +121,56 @@ public class ATMCCommand implements TabExecutor {
 
                         // Send message
                         atmc.sendMessage(sender, ChatSudo.execute(args[1], message.toString()));
+                        return true;
+                    }
+                }
+                case "confuse" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Confuse a player: /atmc confuse <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.confuse")) || sender instanceof ConsoleCommandSender) {
+                        if (args.length == 2) {
+                            atmc.sendMessage(sender, Component.text("Confuse a player: /atmc confuse <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            return true;
+                        }
+
+                        if (args[2].equalsIgnoreCase("stop")) {
+                            atmc.sendMessage(sender, Confuse.clearMind(args[1]));
+                            return true;
+                        }
+
+                        int seconds = parseInputTime(args[2]);
+                        if (seconds == 0) {
+                            atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
+                            return true;
+                        }
+                        atmc.sendMessage(sender, Confuse.confuse(args[1], seconds));
+                        return true;
+                    }
+                }
+                case "deafen" -> {
+                    if (args.length == 1) {
+                        atmc.sendMessage(sender, Component.text("Deafen a player: /atmc deafen <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a player name
+                        return true;
+                    }
+                    if ((sender instanceof Player player && player.hasPermission("atmc.blind")) || sender instanceof ConsoleCommandSender) {
+                        if (args.length == 2) {
+                            atmc.sendMessage(sender, Component.text("Deafen a player: /atmc deafen <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            return true;
+                        }
+
+                        if (args[2].equalsIgnoreCase("stop")) {
+                            atmc.sendMessage(sender, Deafen.unDeafen(args[1]));
+                            return true;
+                        }
+
+                        int seconds = parseInputTime(args[2]);
+                        if (seconds == 0) {
+                            atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
+                            return true;
+                        }
+                        atmc.sendMessage(sender, Deafen.deafen(args[1], seconds));
                         return true;
                     }
                 }
@@ -166,13 +249,19 @@ public class ATMCCommand implements TabExecutor {
                 }
                 case "freeze" -> {
                     if (args.length == 1) {
-                        atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <time>", NamedTextColor.RED)); // Didn't send in a player name
+                        atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a player name
                         return true;
                     }
                     if ((sender instanceof Player player && player.hasPermission("atmc.freeze")) || sender instanceof ConsoleCommandSender) {
                         if (args.length == 2) {
-                            atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <time>", NamedTextColor.RED)); // Didn't send in a seconds
+                            atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
                             return true;
+                        }
+
+                        FreezeUnfreeze freezeUnfreeze = new FreezeUnfreeze();
+
+                        if (args[2].equalsIgnoreCase("stop")) {
+                            atmc.sendMessage(sender, freezeUnfreeze.unfreeze(args[1]));
                         }
 
                         int seconds = parseInputTime(args[2]);
@@ -180,7 +269,7 @@ public class ATMCCommand implements TabExecutor {
                             atmc.sendMessage(sender, Component.text("Invalid time input! Format is: 30s, 5m, 2h, etc.", NamedTextColor.RED));
                             return true;
                         }
-                        atmc.sendMessage(sender, new FreezeUnfreeze().freeze(args[1], seconds));
+                        atmc.sendMessage(sender, freezeUnfreeze.freeze(args[1], seconds));
                         return true;
                     }
                 }
@@ -271,20 +360,12 @@ public class ATMCCommand implements TabExecutor {
             }
             case 3 -> {
                 switch (args[0].toLowerCase()) {
-                    case "burn", "freeze" -> {
-                        if (player.hasPermission("atmc.burn") || player.hasPermission("atmc.freeze")) {
-                            tabs.add("time");
-                        }
+                    case "blind", "burn", "confuse", "deafen", "freeze", "jump" -> {
+                        return TabCompleteHelper.TabComplete(args[2], new ArrayList<>(Arrays.asList("stop", "time")), player);
                     }
                     case "chatsudo" -> {
                         if (player.hasPermission("atmc.chatsudo")) {
                             tabs.add("message...");
-                        }
-                    }
-                    case "jump" -> {
-                        if (player.hasPermission("atmc.jump")) {
-                            tabs.add("time");
-                            tabs.add("stop");
                         }
                     }
                 }

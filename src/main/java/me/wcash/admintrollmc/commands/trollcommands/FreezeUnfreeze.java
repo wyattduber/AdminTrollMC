@@ -43,6 +43,7 @@ public class FreezeUnfreeze implements Listener {
                 // Stop Listening and remove all frozen effects
                 player.setFrozen(false);
                 player.removePotionEffect(PotionEffectType.SLOW);
+                player.clearFreezeTask();
                 PlayerJumpEvent.getHandlerList().unregister(this);
                 EntityDamageEvent.getHandlerList().unregister(this);
             } catch (InterruptedException e) {
@@ -71,6 +72,8 @@ public class FreezeUnfreeze implements Listener {
 
         player.setFrozen(false);
         player.removePotionEffect(PotionEffectType.SLOW);
+        player.getFreezeTask().cancel();
+        player.clearFreezeTask();
         PlayerJumpEvent.getHandlerList().unregister(this);
         EntityDamageEvent.getHandlerList().unregister(this);
 

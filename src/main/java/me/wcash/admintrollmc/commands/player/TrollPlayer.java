@@ -8,8 +8,12 @@ public abstract class TrollPlayer implements Player {
     private boolean isFrozen = false;
     private boolean isBurning = false;
     private boolean isDontStopJumping = false;
+    private boolean isConfused = false;
+    private boolean isDeafened = false;
+    private boolean isBlind= false;
     private BukkitTask freezeTask = null;
     private BukkitTask isJumpingTask = null;
+    private BukkitTask isDeafenedTask = null;
 
     public boolean isFrozen() {
         return isFrozen;
@@ -43,12 +47,56 @@ public abstract class TrollPlayer implements Player {
         return freezeTask;
     }
 
+    public void clearFreezeTask() {
+        this.freezeTask = null;
+    }
+
     public void setIsJumpingTask(BukkitTask jumpingTask) {
         this.isJumpingTask = jumpingTask;
     }
 
+    public void clearIsJumpingTask() {
+        this.isJumpingTask = null;
+    }
+
     public BukkitTask getIsJumpingTask() {
         return isJumpingTask;
+    }
+
+    public boolean isConfused() {
+        return isConfused;
+    }
+
+    public void setConfused(boolean isConfused) {
+        this.isConfused = isConfused;
+    }
+
+    public boolean isDeafened() {
+        return isDeafened;
+    }
+
+    public void setDeafened(boolean isDeaf) {
+        this.isDeafened = isDeaf;
+    }
+
+    public BukkitTask getIsDeafenedTask() {
+        return isDeafenedTask;
+    }
+
+    public void setIsDeafenedTask(BukkitTask isDeafenedTask) {
+        this.isDeafenedTask = isDeafenedTask;
+    }
+
+    public void clearIsDeafenedTask() {
+        this.isDeafenedTask = null;
+    }
+
+    public boolean isBlind() {
+        return isBlind;
+    }
+
+    public void setBlind(boolean isBlind) {
+        this.isBlind = isBlind;
     }
 
 }

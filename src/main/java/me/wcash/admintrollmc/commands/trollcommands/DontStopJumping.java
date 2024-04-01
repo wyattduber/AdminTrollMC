@@ -27,11 +27,12 @@ public class DontStopJumping {
         player.setIsJumpingTask(Bukkit.getScheduler().runTaskAsynchronously(atmc, () -> {
 
             try {
-                Thread.sleep(seconds * 20L);
+                Thread.sleep(seconds * 1000L);
             } catch (InterruptedException ignored) {}
 
             player.setJumping(false);
             player.setDontStopJumping(false);
+            player.clearIsJumpingTask();
         }));
 
         return Component.text(target + "now jumping for " + AdminTrollMC.formatSeconds(seconds) + "!");
@@ -48,6 +49,7 @@ public class DontStopJumping {
         }
 
         player.getIsJumpingTask().cancel();
+        player.clearIsJumpingTask();
         player.setDontStopJumping(false);
         player.setJumping(false);
 
