@@ -60,6 +60,20 @@ public class Database {
         }
     }
 
+    public String getPlayerName(UUID uuid) {
+        try {
+            PreparedStatement stmt = dbcon.prepareStatement("SELECT name FROM player WHERE uuid=?");
+            stmt.setString(1, uuid.toString());
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next() ? rs.getString("name") : null;
+        } catch (SQLException e) {
+            atmc.error("Error fetching name for user " + getName(uuid) + "!");
+            atmc.error("Error Message: " + e.getMessage());
+            return null;
+        }
+    }
+
     public void insertPlayer(String name, UUID uuid) {
         try {
             PreparedStatement stmt = dbcon.prepareStatement("INSERT INTO player(name, uuid, isFrozen, frozenTimeLeft, isBurning, burningTimeLeft, isDontStopJumping, dontStopJumpingTimeLeft, isConfused, confusedTimeLeft, isDeafened, deafenedTimeLeft, isBlind, blindTimeLeft) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
