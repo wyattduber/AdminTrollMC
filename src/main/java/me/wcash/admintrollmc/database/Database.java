@@ -119,31 +119,45 @@ public class Database {
 
     /* Player Attribute Methods */
 
-    public <T> T getAttribute(UUID uuid, String attribute, Class<T> type) {
+    public boolean getStatus(UUID uuid, String attribute) {
         try {
-             PreparedStatement stmt = dbcon.prepareStatement("SELECT ? FROM player WHERE uuid=?");
+            PreparedStatement stmt = dbcon.prepareStatement("SELECT ? FROM player WHERE uuid=?");
 
-             stmt.setString(1, attribute);
-             stmt.setString(2, uuid.toString());
+            stmt.setString(1, attribute);
+            stmt.setString(2, uuid.toString());
 
-             ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
-             if (rs.next()) {
-                 var value = rs.getObject(attribute);
-                 if (type.isInstance(value)) {
-                     return type.cast(value);
-                 } else {
-                     // Handle cases where key doesn't exist or value cannot be cast to type
-                     // For simplicity, you can throw an exception here or return a default value
-                     throw new IllegalArgumentException("Invalid key or incompatible type");
-                 }
-             } else {
-                 return null;
-             }
+            if (rs.next()) {
+                return rs.getBoolean(attribute);
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
-            atmc.error("Error getting attribute " + attribute + " for user " + getName(uuid) + "!");
+            atmc.error("Error getting status " + attribute + " for user " + getName(uuid) + "!");
             atmc.error("Error Message: " + e.getMessage());
-            return null;
+            return false;
+        }
+    }
+
+    public int getTimeLeft(UUID uuid, String attribute) {
+        try {
+            PreparedStatement stmt = dbcon.prepareStatement("SELECT ? FROM player WHERE uuid=?");
+
+            stmt.setString(1, attribute);
+            stmt.setString(2, uuid.toString());
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(attribute);
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            atmc.error("Error getting time left on " + attribute + " for user " + getName(uuid) + "!");
+            atmc.error("Error Message: " + e.getMessage());
+            return 0;
         }
     }
 

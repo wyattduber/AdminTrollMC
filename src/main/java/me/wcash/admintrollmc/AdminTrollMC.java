@@ -1,5 +1,6 @@
 package me.wcash.admintrollmc;
 
+import me.wcash.admintrollmc.commands.ATMCCommand;
 import me.wcash.admintrollmc.database.Database;
 import me.wcash.admintrollmc.player.TrollPlayer;
 import me.wcash.admintrollmc.listeners.LoginListener;
@@ -30,6 +31,7 @@ public final class AdminTrollMC extends JavaPlugin {
     public FileConfiguration config;
     public File customConfigFile;
     public Database db;
+    public ATMCCommand cmd;
     public LoginListener loginListener;
     public LogoutListener logoutListener;
     public static String[] versions = new String[2];
@@ -72,7 +74,8 @@ public final class AdminTrollMC extends JavaPlugin {
 
         /* Initialize the Base Command */
         try {
-            Objects.requireNonNull(this.getCommand("atmc")).setExecutor(new me.wcash.admintrollmc.commands.ATMCCommand());
+            cmd = new ATMCCommand();
+            Objects.requireNonNull(this.getCommand("atmc")).setExecutor(cmd);
         } catch (NullPointerException e) {
             error("Error setting up commands! Contact the developer if you cannot fix this issue. Stack Trace:");
             error(e.getMessage());

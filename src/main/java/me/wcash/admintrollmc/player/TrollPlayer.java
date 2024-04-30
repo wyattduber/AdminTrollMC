@@ -13,7 +13,7 @@ public abstract class TrollPlayer implements Player {
     private boolean isDontStopJumping = false;
     private boolean isConfused = false;
     private boolean isDeafened = false;
-    private boolean isBlind= false;
+    private boolean isBlind = false;
     private BukkitTask freezeTask = null;
     private BukkitTask isJumpingTask = null;
     private BukkitTask isDeafenedTask = null;

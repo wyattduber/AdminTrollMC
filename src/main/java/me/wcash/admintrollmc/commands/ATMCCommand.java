@@ -19,7 +19,9 @@ import java.util.List;
 
 public class ATMCCommand implements TabExecutor {
 
-    public final AdminTrollMC atmc = AdminTrollMC.getPlugin();
+    private final AdminTrollMC atmc = AdminTrollMC.getPlugin();
+
+    public final FreezeUnfreeze freezeUnfreeze = new FreezeUnfreeze();
     public final List<String> subcommands = new ArrayList<>()
     {
         {
@@ -257,8 +259,6 @@ public class ATMCCommand implements TabExecutor {
                             atmc.sendMessage(sender, Component.text("Freeze a player: /atmc freeze <player> <stop/time>", NamedTextColor.RED)); // Didn't send in a seconds
                             return true;
                         }
-
-                        FreezeUnfreeze freezeUnfreeze = new FreezeUnfreeze();
 
                         if (args[2].equalsIgnoreCase("stop")) {
                             atmc.sendMessage(sender, freezeUnfreeze.unfreeze(args[1]));
