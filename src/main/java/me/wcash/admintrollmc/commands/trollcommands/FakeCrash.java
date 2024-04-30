@@ -17,7 +17,7 @@ public class FakeCrash {
             return Component.text("Player is not online!", NamedTextColor.RED);
         }
 
-        player.kick(Component.text((String)atmc.getConfigValue("fake-crash-message")), PlayerKickEvent.Cause.UNKNOWN);
+        player.kick(Component.text(atmc.getConfigValue("fake-crash-message", String.class)), PlayerKickEvent.Cause.UNKNOWN);
 
         return Component.text("Crashed " + target + "!");
     }

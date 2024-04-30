@@ -17,7 +17,7 @@ public abstract class TrollPlayer implements Player {
     private BukkitTask freezeTask = null;
     private BukkitTask isJumpingTask = null;
     private BukkitTask isDeafenedTask = null;
-    private List<BukkitTask> taskList = new ArrayList<>() {
+    private final List<BukkitTask> taskList = new ArrayList<>() {
         {
             add(freezeTask);
             add(isJumpingTask);

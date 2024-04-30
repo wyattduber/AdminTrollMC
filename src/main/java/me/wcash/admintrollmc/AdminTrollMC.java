@@ -1,5 +1,6 @@
 package me.wcash.admintrollmc;
 
+import me.wcash.admintrollmc.database.Database;
 import me.wcash.admintrollmc.player.TrollPlayer;
 import me.wcash.admintrollmc.listeners.LoginListener;
 import me.wcash.admintrollmc.listeners.LogoutListener;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -27,6 +29,7 @@ public final class AdminTrollMC extends JavaPlugin {
 
     public FileConfiguration config;
     public File customConfigFile;
+    public Database db;
     public LoginListener loginListener;
     public LogoutListener logoutListener;
     public static String[] versions = new String[2];
@@ -53,6 +56,16 @@ public final class AdminTrollMC extends JavaPlugin {
 
         /* Initialize Online Players Map */
         onlinePlayers = new HashMap<>(); // Can be empty on startup since nobody is online
+
+        /* Load Database */
+        try {
+            db = new Database("admintrollmc.sqlite.db");
+            log("Database Found! Path is " + db.getDbPath());
+        } catch (SQLException e) {
+            error("Error setting up database! Is there permissions issue preventing the database file creation?");
+            error("Exception Message:" + e.getMessage());
+            error("SQL State: " + e.getSQLState());
+        }
 
         /* Initialize Listeners */
         initListeners();
@@ -129,8 +142,15 @@ public final class AdminTrollMC extends JavaPlugin {
         log("Minecraft Listeners Loaded!");
     }
 
-    public Object getConfigValue(String key) {
-        return configValues.get(key);
+    public <T> T getConfigValue(String key, Class<T> type) {
+        Object value = configValues.get(key);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        } else {
+            // Handle cases where key doesn't exist or value cannot be cast to type
+            // For simplicity, you can throw an exception here or return a default value
+            throw new IllegalArgumentException("Invalid key or incompatible type");
+        }
     }
 
     /* Standard Methods */

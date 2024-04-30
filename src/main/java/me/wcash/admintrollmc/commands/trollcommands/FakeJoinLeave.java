@@ -17,7 +17,7 @@ public class FakeJoinLeave {
             return Component.text("Player is not online!", NamedTextColor.RED);
         }
 
-        String message = (String) atmc.getConfigValue("fake-" + type + "-message-format");
+        String message = atmc.getConfigValue("fake-" + type + "-message-format", String.class);
 
         // Handle Placeholders in join message, will add more in future
         message = message.replace("%USERNAME%", player.getName());
