@@ -28,7 +28,7 @@ public class FreezeUnfreeze implements Listener {
             return Component.text(target + " is already frozen!", NamedTextColor.RED);
         }
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, seconds * 20, 255));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, seconds * 20, 255));
         player.setFrozen(true);
         player.setFreezeTicks(seconds * 20);
 
@@ -42,7 +42,7 @@ public class FreezeUnfreeze implements Listener {
 
                 // Stop Listening and remove all frozen effects
                 player.setFrozen(false);
-                player.removePotionEffect(PotionEffectType.SLOW);
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
                 player.clearFreezeTask();
                 PlayerJumpEvent.getHandlerList().unregister(this);
                 EntityDamageEvent.getHandlerList().unregister(this);
@@ -71,7 +71,7 @@ public class FreezeUnfreeze implements Listener {
             player.getFreezeTask().cancel();
 
         player.setFrozen(false);
-        player.removePotionEffect(PotionEffectType.SLOW);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.getFreezeTask().cancel();
         player.clearFreezeTask();
         PlayerJumpEvent.getHandlerList().unregister(this);
