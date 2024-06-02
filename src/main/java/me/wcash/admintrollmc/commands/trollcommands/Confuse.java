@@ -23,7 +23,7 @@ public class Confuse {
             return Component.text("Player is already confused!", NamedTextColor.RED);
 
         player.setConfused(true);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, seconds, 255));
+        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, seconds, 255));
 
         return Component.text(String.format("Confused " + target + " for " + AdminTrollMC.formatSeconds(seconds) + "!"));
     }
@@ -39,7 +39,7 @@ public class Confuse {
             return Component.text("Player is not confused!", NamedTextColor.RED);
 
         player.setConfused(false);
-        player.removePotionEffect(PotionEffectType.NAUSEA);
+        player.getPlayer().removePotionEffect(PotionEffectType.NAUSEA);
 
         return Component.text(target + " is no longer confused!");
     }

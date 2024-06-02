@@ -20,7 +20,7 @@ public class BurnExtinguish {
             return Component.text(target + " is already burning!", NamedTextColor.RED);
         }
 
-        player.setFireTicks(seconds * 20);
+        player.getPlayer().setFireTicks(seconds * 20);
         player.setBurning(true);
 
         return Component.text("Burning " + target + " for " + AdminTrollMC.formatSeconds(seconds) + "!");
@@ -36,7 +36,7 @@ public class BurnExtinguish {
             return Component.text(target + " is not burning!", NamedTextColor.RED);
         }
 
-        player.setFireTicks(0);
+        player.getPlayer().setFireTicks(0);
         player.setBurning(false);
 
         return Component.text("Extinguished " + target + "!");

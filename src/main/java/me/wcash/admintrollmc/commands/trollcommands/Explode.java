@@ -28,7 +28,7 @@ public class Explode {
             return Component.text("Invalid power! Submit a number between 1-10.", NamedTextColor.RED);
         }
 
-        player.getLocation().createExplosion(parsedPower, false, false);
+        player.getPlayer().getLocation().createExplosion(parsedPower, false, false);
 
         return Component.text("Exploded " + target + "!");
     }

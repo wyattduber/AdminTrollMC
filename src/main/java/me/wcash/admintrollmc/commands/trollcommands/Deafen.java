@@ -27,7 +27,7 @@ public class Deafen {
             try {
 
                 for (long i = 0; i < seconds * 1000L; i += 1000L) {
-                    player.stopAllSounds();
+                    player.getPlayer().stopAllSounds();
                     Thread.sleep(1000L);
                 }
 
@@ -52,7 +52,7 @@ public class Deafen {
             return Component.text("Player is not deaf!", NamedTextColor.RED);
 
         player.setConfused(false);
-        player.removePotionEffect(PotionEffectType.NAUSEA);
+        player.getPlayer().removePotionEffect(PotionEffectType.NAUSEA);
         player.getIsDeafenedTask().cancel();
         player.clearIsDeafenedTask();
 

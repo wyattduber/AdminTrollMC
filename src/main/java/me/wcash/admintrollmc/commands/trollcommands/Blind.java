@@ -23,7 +23,7 @@ public class Blind {
             return Component.text("Player is already blinded!", NamedTextColor.RED);
 
         player.setBlind(true);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, seconds, 255));
+        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, seconds, 255));
 
         return Component.text("Blinded " + target + "for " + AdminTrollMC.formatSeconds(seconds) + "!");
     }
@@ -39,7 +39,7 @@ public class Blind {
             return Component.text("Player is not blinded!", NamedTextColor.RED);
 
         player.setBlind(false);
-        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
 
         return Component.text(target + " has regained their sight!");
     }
