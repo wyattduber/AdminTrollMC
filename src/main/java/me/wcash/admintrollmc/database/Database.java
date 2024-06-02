@@ -24,10 +24,10 @@ public class Database {
         updateTableStructure("player",
                 "CREATE TABLE player (name TEXT NOT NULL, uuid TEXT NOT NULL, " +
                         "isFrozen BIT NOT NULL, frozenTimeLeft INT NOT NULL, " +
-                        "isBurning BIT NOT NULL, burningTimeLeft INT NOT NULL" +
-                        "isDontStopJumping BIT NOT NULL, dontStopJumpingTimeLeft INT NOT NULL" +
-                        "isConfused BIT NOT NULL, confusedTimeLeft INT NOT NULL" +
-                        "isDeafened BIT NOT NULL, deafenedTimeLeft INT NOT NULL" +
+                        "isBurning BIT NOT NULL, burningTimeLeft INT NOT NULL, " +
+                        "isDontStopJumping BIT NOT NULL, dontStopJumpingTimeLeft INT NOT NULL, " +
+                        "isConfused BIT NOT NULL, confusedTimeLeft INT NOT NULL, " +
+                        "isDeafened BIT NOT NULL, deafenedTimeLeft INT NOT NULL, " +
                         "isBlind BIT NOT NULL, blindTimeLeft INT NOT NULL" +
                         ")");
     }
