@@ -52,7 +52,7 @@ public class Deafen {
             return Component.text("Player is not deaf!", NamedTextColor.RED);
 
         player.setConfused(false);
-        player.removePotionEffect(PotionEffectType.CONFUSION);
+        player.removePotionEffect(PotionEffectType.NAUSEA);
         player.getIsDeafenedTask().cancel();
         player.clearIsDeafenedTask();
 
