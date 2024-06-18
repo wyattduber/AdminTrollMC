@@ -22,7 +22,7 @@ public class DontStopJumping {
         }
 
         player.setDontStopJumping(true);
-        player.setJumping(true);
+        player.getPlayer().setJumping(true);
 
         player.setIsJumpingTask(Bukkit.getScheduler().runTaskAsynchronously(atmc, () -> {
 
@@ -30,7 +30,7 @@ public class DontStopJumping {
                 Thread.sleep(seconds * 1000L);
             } catch (InterruptedException ignored) {}
 
-            player.setJumping(false);
+            player.getPlayer().setJumping(false);
             player.setDontStopJumping(false);
             player.clearIsJumpingTask();
         }));
@@ -51,7 +51,7 @@ public class DontStopJumping {
         player.getIsJumpingTask().cancel();
         player.clearIsJumpingTask();
         player.setDontStopJumping(false);
-        player.setJumping(false);
+        player.getPlayer().setJumping(false);
 
         return Component.text(target + " is no longer endlessly jumping!");
     }

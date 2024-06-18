@@ -1,7 +1,6 @@
 package me.wcash.admintrollmc.listeners;
 
 import me.wcash.admintrollmc.AdminTrollMC;
-import me.wcash.admintrollmc.commands.ATMCCommand;
 import me.wcash.admintrollmc.commands.trollcommands.*;
 import me.wcash.admintrollmc.database.Database;
 import me.wcash.admintrollmc.player.TrollPlayer;
@@ -27,70 +26,70 @@ public class LoginListener implements Listener {
 
     @EventHandler
     public void onLogin(PlayerJoinEvent event) {
-        TrollPlayer player = (TrollPlayer) event.getPlayer();
+        TrollPlayer trollPlayer = new TrollPlayer(event.getPlayer());
         
         /* Check for Updates and send message to player with permission to see updates */
-        if (updateRequired && (player.hasPermission("atmc.update") || player.isOp())) {
-            atmc.sendMessage(player, AdminTrollMC.replaceColors("Version &c" + versions[0] + " &favailable! You have &c" + versions[1] + "&f."));
-            atmc.sendMessage(player, AdminTrollMC.replaceColors("Download it at: &9https://www.spigotmc.org/resources/mcdbridge-beta.88409/"));
+        if (updateRequired && (trollPlayer.getPlayer().getPlayer().hasPermission("atmc.update") || trollPlayer.getPlayer().isOp())) {
+            atmc.sendMessage(trollPlayer.getPlayer(), AdminTrollMC.replaceColors("Version &c" + versions[0] + " &favailable! You have &c" + versions[1] + "&f."));
+            atmc.sendMessage(trollPlayer.getPlayer(), AdminTrollMC.replaceColors("Download it at: &9https://www.spigotmc.org/resources/mcdbridge-beta.88409/"));
 
             atmc.log("Version " + versions[0] + " available! You have " + versions[1] + ".");
             atmc.log("Download it at: https://www.spigotmc.org/resources/mcdbridge-beta.88409/");
         }
 
         /* Check if player exists in database, if not, add them. If so, check username and update if necessary */
-        if (!db.doesPlayerExistInDatabase(player.getUniqueId())) {
-            db.insertPlayer(player.getName(), player.getUniqueId());
+        if (!db.doesPlayerExistInDatabase(trollPlayer.getPlayer().getUniqueId())) {
+            db.insertPlayer(trollPlayer.getPlayer().getName(), trollPlayer.getPlayer().getUniqueId());
         } else {
             // Update username if applicable
-            if (!db.getPlayerName(player.getUniqueId()).equals(player.getName())) {
-                db.updatePlayerUsername(player.getName(), player.getUniqueId());
+            if (!db.getPlayerName(trollPlayer.getPlayer().getUniqueId()).equals(trollPlayer.getPlayer().getName())) {
+                db.updatePlayerUsername(trollPlayer.getPlayer().getName(), trollPlayer.getPlayer().getUniqueId());
             }
 
-            startTrollingOnLogin(player);
+            startTrollingOnLogin(trollPlayer);
         }
 
         /* Add player to onlinePlayers list */
-        atmc.onlinePlayers.put(player.getName(), player);
+        atmc.onlinePlayers.put(trollPlayer.getPlayer().getName(), trollPlayer);
     }
 
     private void startTrollingOnLogin(TrollPlayer player) {
-        UUID uuid = player.getUniqueId();
+        UUID uuid = player.getPlayer().getUniqueId();
 
         // Frozen Check
         if (db.getStatus(uuid, "isFrozen")) {
             int secondsLeft = db.getTimeLeft(uuid, "frozenTimeLeft");
-            atmc.cmd.freezeUnfreeze.freeze(player.getName(), secondsLeft);
+            atmc.cmd.freezeUnfreeze.freeze(player.getPlayer().getName(), secondsLeft);
         }
 
         // Burning Check
         if (db.getStatus(uuid, "isBurning")) {
             int secondsLeft = db.getTimeLeft(uuid, "burningTimeLeft");
-            BurnExtinguish.burn(player.getName(), secondsLeft);
+            BurnExtinguish.burn(player.getPlayer().getName(), secondsLeft);
         }
 
         // Jumping Check
         if (db.getStatus(uuid, "isDontStopJumping")) {
             int secondsLeft = db.getTimeLeft(uuid, "dontStopJumpingTimeLeft");
-            DontStopJumping.startJumping(player.getName(), secondsLeft);
+            DontStopJumping.startJumping(player.getPlayer().getName(), secondsLeft);
         }
 
         // Confused Check
         if (db.getStatus(uuid, "isConfused")) {
             int secondsLeft = db.getTimeLeft(uuid, "confusedTimeLeft");
-            Confuse.confuse(player.getName(), secondsLeft);
+            Confuse.confuse(player.getPlayer().getName(), secondsLeft);
         }
 
         // Deafened Check
         if (db.getStatus(uuid, "isDeafened")) {
             int secondsLeft = db.getTimeLeft(uuid, "deafenedTimeLeft");
-            Deafen.deafen(player.getName(), secondsLeft);
+            Deafen.deafen(player.getPlayer().getName(), secondsLeft);
         }
 
         // Blind Check
         if (db.getStatus(uuid, "isBlind")) {
             int secondsLeft = db.getTimeLeft(uuid, "blindTimeLeft");
-            Blind.blind(player.getName(), secondsLeft);
+            Blind.blind(player.getPlayer().getName(), secondsLeft);
         }
     }
 

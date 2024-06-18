@@ -2,12 +2,13 @@ package me.wcash.admintrollmc.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public abstract class TrollPlayer implements Player {
+public class TrollPlayer {
 
+    private Player player;
     private boolean isFrozen = false;
     private boolean isBurning = false;
     private boolean isDontStopJumping = false;
@@ -17,6 +18,15 @@ public abstract class TrollPlayer implements Player {
     private BukkitTask freezeTask = null;
     private BukkitTask isJumpingTask = null;
     private BukkitTask isDeafenedTask = null;
+
+    public TrollPlayer(@NotNull Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     private final List<BukkitTask> taskList = new ArrayList<>() {
         {
             add(freezeTask);
@@ -120,5 +130,4 @@ public abstract class TrollPlayer implements Player {
     public List<BukkitTask> getTaskList(){
         return taskList;
     }
-
 }

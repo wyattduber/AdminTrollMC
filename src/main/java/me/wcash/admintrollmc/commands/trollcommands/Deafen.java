@@ -27,7 +27,7 @@ public class Deafen {
             try {
 
                 for (long i = 0; i < seconds * 1000L; i += 1000L) {
-                    player.stopAllSounds();
+                    player.getPlayer().stopAllSounds();
                     Thread.sleep(1000L);
                 }
 

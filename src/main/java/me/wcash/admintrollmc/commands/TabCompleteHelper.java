@@ -13,7 +13,7 @@ public class TabCompleteHelper {
 
         // Base Cases
         if (currentArgument.isEmpty()) {
-            return validTabCompletes;
+            return commands; // Return all possibilities
         } else if (commands.contains(currentArgument.toLowerCase())) {
             if (player.hasPermission("atmc." + currentArgument.toLowerCase()))
                 validTabCompletes.add(currentArgument.toLowerCase());
@@ -21,10 +21,12 @@ public class TabCompleteHelper {
         }
 
         for (String command : commands) {
-            if (command.substring(0, currentArgumentLength).equalsIgnoreCase(currentArgument)) {
-                if (player.hasPermission("atmc." + command))
-                    validTabCompletes.add(command);
-            }
+            try {
+                if (command.substring(0, currentArgumentLength).equalsIgnoreCase(currentArgument)) {
+                    if (player.hasPermission("atmc." + command))
+                        validTabCompletes.add(command);
+                }
+            } catch (StringIndexOutOfBoundsException ignored) {}
         }
 
         return validTabCompletes;

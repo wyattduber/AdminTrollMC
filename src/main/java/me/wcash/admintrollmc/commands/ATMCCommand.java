@@ -182,6 +182,11 @@ public class ATMCCommand implements TabExecutor {
                         return true;
                     }
 
+                    if (args.length == 2) {
+                        atmc.sendMessage(sender, Explode.execute(args[1], "4")); // Didn't send in a power, 4 is default
+                        return true;
+                    }
+
                     if ((sender instanceof Player player && player.hasPermission("atmc.explode")) || sender instanceof ConsoleCommandSender) {
                         atmc.sendMessage(sender, Explode.execute(args[1], args[2]));
                         return true;
